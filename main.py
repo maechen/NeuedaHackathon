@@ -1,4 +1,6 @@
-from NeuedaHackathon.Data.data import process_data
+import firebase_admin
+from firebase_admin import credentials, firestore
+from NeuedaHackathon.Data.data import process_data, get_data
 from NeuedaHackathon.Model.model import get_model, get_accuracy, get_confusion_matrix
 
 # Load the data

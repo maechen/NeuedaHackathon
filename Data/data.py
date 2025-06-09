@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+from firebase_admin import firestore
 from sklearn.model_selection import train_test_split
 
 def process_data(path):
@@ -35,3 +36,18 @@ def process_data(path):
     X_train, X_test, y_train, y_test = train_test_split(data, target, test_size=0.2, random_state=0)
     return X_train, X_test, y_train, y_test
 
+#Get data from Firestore
+def get_data(collection_name):
+    """
+    Retrieves all documents from a specified Firestore collection.
+
+    Args:
+        collection_name (str): The name of the Firestore collection to fetch data from.
+
+    Returns:
+        list: A list of dictionaries, each representing a document from the collection.
+    """
+    db = firestore.client()
+    docs = db.collection(collection_name).stream()
+    data = [doc.to_dict() for doc in docs]
+    return data
