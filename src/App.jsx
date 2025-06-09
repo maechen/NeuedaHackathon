@@ -230,14 +230,32 @@ function VillageBankPage({ onBack }) {
         backgroundColor: '#121212',
         color: '#fff',
         height: '100vh',
+        width: '100vw', // Ensure it covers the full width
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        padding: '20px',
-        position: 'relative',
+        padding: 0, // Remove padding
+        margin: 0, // Remove margin
+        position: 'absolute', // Ensure it overlays the entire viewport
+        top: 0, // Start from the top
+        left: 0, // Start from the left
         flexDirection: 'column',
       }}
     >
+      {/* Add the bank name at the top-left corner */}
+      <h1
+        style={{
+          color: '#FF6600',
+          position: 'absolute',
+          top: '20px',
+          left: '20px',
+          margin: 0,
+          fontSize: '3rem',
+        }}
+      >
+        Village Bank
+      </h1>
+
       {!review && !result && (
         <div
           className="form-container"
@@ -407,10 +425,11 @@ function App() {
 
   return (
     <div className="app">
+      {/* Conditionally render the header only if the page is not 'bank' */}
       {page !== 'bank' && (
         <header className="header">
           <h1
-            style={{cursor: 'pointer'}}
+            style={{ cursor: 'pointer' }}
             onClick={() => {
               if (isSignedIn) {
                 setPage('main');
@@ -422,41 +441,86 @@ function App() {
             ClearPath
           </h1>
           {isSignedIn && (
-            <div style={{position: 'fixed', top: 18, right: 32, zIndex: 1200}}>
+            <div style={{ position: 'fixed', top: 18, right: 32, zIndex: 1200 }}>
               <button
-                style={{background: '#cce7ff', color: '#003366', border: 'none', borderRadius: 8, padding: '8px 18px', fontWeight: 600, cursor: 'pointer', fontSize: '1rem', boxShadow: '0 2px 8px rgba(0,0,0,0.04)'}}
-                onClick={() => setShowUserMenu(v => !v)}
+                style={{
+                  background: '#cce7ff',
+                  color: '#003366',
+                  border: 'none',
+                  borderRadius: 8,
+                  padding: '8px 18px',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  fontSize: '1rem',
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
+                }}
+                onClick={() => setShowUserMenu((v) => !v)}
               >
                 ☰
               </button>
               {showUserMenu && (
-                <div style={{position: 'absolute', top: 40, right: 0, background: '#fff', borderRadius: 10, boxShadow: '0 2px 12px rgba(0,0,0,0.10)', minWidth: 120, padding: 0, overflow: 'visible', zIndex: 1300}}>
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: 40,
+                    right: 0,
+                    background: '#fff',
+                    borderRadius: 10,
+                    boxShadow: '0 2px 12px rgba(0,0,0,0.10)',
+                    minWidth: 120,
+                    padding: 0,
+                    overflow: 'visible',
+                    zIndex: 1300,
+                  }}
+                >
                   <button
-                    style={{width: '100%', background: 'none', border: 'none', color: '#003366', padding: '12px 18px', textAlign: 'left', fontSize: '1rem', cursor: 'pointer'}}
+                    style={{
+                      width: '100%',
+                      background: 'none',
+                      border: 'none',
+                      color: '#003366',
+                      padding: '12px 18px',
+                      textAlign: 'left',
+                      fontSize: '1rem',
+                      cursor: 'pointer',
+                    }}
                     onClick={handleSignOut}
-                  >Sign Out</button>
+                  >
+                    Sign Out
+                  </button>
                 </div>
               )}
             </div>
           )}
           {showAccountCreated && (
-            <div className="account-created-notification" style={{position: 'fixed', top: 24, right: 32, background: '#d4f8e8', color: '#1a7f4d', borderRadius: 8, padding: '12px 28px', fontWeight: 600, fontSize: '1.1rem', boxShadow: '0 2px 12px rgba(0,0,0,0.10)', zIndex: 999, opacity: 1, transition: 'opacity 1.2s'}}>
+            <div
+              className="account-created-notification"
+              style={{
+                position: 'fixed',
+                top: 24,
+                right: 32,
+                background: '#d4f8e8',
+                color: '#1a7f4d',
+                borderRadius: 8,
+                padding: '12px 28px',
+                fontWeight: 600,
+                fontSize: '1.1rem',
+                boxShadow: '0 2px 12px rgba(0,0,0,0.10)',
+                zIndex: 999,
+                opacity: 1,
+                transition: 'opacity 1.2s',
+              }}
+            >
               Account created!
             </div>
           )}
         </header>
       )}
       {page === 'signin' && (
-        <SignIn 
-          onSignIn={handleSignIn} 
-          onSwitchToCreate={() => setPage('create')} 
-        />
+        <SignIn onSignIn={handleSignIn} onSwitchToCreate={() => setPage('create')} />
       )}
       {page === 'create' && (
-        <CreateAccount 
-          onCreate={handleCreate} 
-          onSwitchToSignIn={() => setPage('signin')} 
-        />
+        <CreateAccount onCreate={handleCreate} onSwitchToSignIn={() => setPage('signin')} />
       )}
       {page === 'main' && (
         <div className="content">
@@ -466,25 +530,25 @@ function App() {
             <div className="button-group loan-options">
               <div className="loan-option">
                 <div className="loan-card" onClick={() => setPage('home-loan')}>
-                  <img src={houseIcon} alt="Home Loan" style={{width: '60%', height: '60%'}} />
+                  <img src={houseIcon} alt="Home Loan" style={{ width: '60%', height: '60%' }} />
                 </div>
                 <div className="loan-label">Home Loan</div>
               </div>
               <div className="loan-option">
                 <div className="loan-card" onClick={() => setPage('auto-loan')}>
-                  <img src={carIcon} alt="Auto Loan" style={{width: '60%', height: '60%'}} />
+                  <img src={carIcon} alt="Auto Loan" style={{ width: '60%', height: '60%' }} />
                 </div>
                 <div className="loan-label">Auto Loan</div>
               </div>
               <div className="loan-option">
                 <div className="loan-card" onClick={() => setPage('school-loan')}>
-                  <img src={schoolIcon} alt="School Loan" style={{width: '60%', height: '60%'}} />
+                  <img src={schoolIcon} alt="School Loan" style={{ width: '60%', height: '60%' }} />
                 </div>
                 <div className="loan-label">School Loan</div>
               </div>
               <div className="loan-option">
                 <div className="loan-card" onClick={() => setPage('personal-loan')}>
-                  <img src={personalIcon} alt="Personal Loan" style={{width: '48%', height: '48%'}} />
+                  <img src={personalIcon} alt="Personal Loan" style={{ width: '48%', height: '48%' }} />
                 </div>
                 <div className="loan-label">Personal Loan</div>
               </div>
@@ -505,9 +569,9 @@ function App() {
         <PersonalLoanForm onBack={() => setPage('main')} onSubmit={handleFormSubmit} />
       )}
       {page === 'result' && (
-        <ApprovalResult 
-          percent={approvalPercent} 
-          onBack={() => setPage('main')} 
+        <ApprovalResult
+          percent={approvalPercent}
+          onBack={() => setPage('main')}
           onPercentChange={setApprovalPercent}
           onGoToBank={() => setPage('bank')}
         />
