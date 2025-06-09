@@ -327,3 +327,11 @@ a:hover {
     margin-right: auto;
   }
 }
+
+.account-created-notification {
+  opacity: 1;
+  transition: opacity 1.2s;
+}
+.account-created-notification[style*='opacity: 0'] {
+  opacity: 0 !important;
+}

@@ -83,18 +83,29 @@ function CreateAccount({ onCreate, onSwitchToSignIn }) {
 function App() {
   const [page, setPage] = React.useState('signin');
   const [approvalPercent, setApprovalPercent] = React.useState(90); // default for now
+  const [showAccountCreated, setShowAccountCreated] = React.useState(false);
+  const [showUserMenu, setShowUserMenu] = React.useState(false);
+  const [isSignedIn, setIsSignedIn] = React.useState(false);
 
   const handleSignIn = (email, password) => {
     // Placeholder: Add authentication logic here
+    setIsSignedIn(true);
     setPage('main');
   };
   const handleCreate = (email, password, confirm) => {
     // Placeholder: Add account creation logic here
     if (password === confirm && password.length > 0) {
-      setPage('main');
+      setShowAccountCreated(true);
+      setTimeout(() => setShowAccountCreated(false), 3000);
+      setPage('signin');
     } else {
       alert('Passwords do not match or are empty.');
     }
+  };
+  const handleSignOut = () => {
+    setIsSignedIn(false);
+    setPage('signin');
+    setShowUserMenu(false);
   };
   const handleFormSubmit = () => {
     setPage('result');
@@ -104,6 +115,29 @@ function App() {
     <div className="app">
       <header className="header">
         <h1 style={{cursor: 'pointer'}} onClick={() => setPage('main')}>ClearPath</h1>
+        {isSignedIn && (
+          <div style={{position: 'fixed', top: 18, right: 32, zIndex: 1200}}>
+            <button
+              style={{background: '#cce7ff', color: '#003366', border: 'none', borderRadius: 8, padding: '8px 18px', fontWeight: 600, cursor: 'pointer', fontSize: '1rem', boxShadow: '0 2px 8px rgba(0,0,0,0.04)'}}
+              onClick={() => setShowUserMenu(v => !v)}
+            >
+              ☰
+            </button>
+            {showUserMenu && (
+              <div style={{position: 'absolute', top: 40, right: 0, background: '#fff', borderRadius: 10, boxShadow: '0 2px 12px rgba(0,0,0,0.10)', minWidth: 120, padding: 0, overflow: 'visible', zIndex: 1300}}>
+                <button
+                  style={{width: '100%', background: 'none', border: 'none', color: '#003366', padding: '12px 18px', textAlign: 'left', fontSize: '1rem', cursor: 'pointer'}}
+                  onClick={handleSignOut}
+                >Sign Out</button>
+              </div>
+            )}
+          </div>
+        )}
+        {showAccountCreated && (
+          <div className="account-created-notification" style={{position: 'fixed', top: 24, right: 32, background: '#d4f8e8', color: '#1a7f4d', borderRadius: 8, padding: '12px 28px', fontWeight: 600, fontSize: '1.1rem', boxShadow: '0 2px 12px rgba(0,0,0,0.10)', zIndex: 999, opacity: 1, transition: 'opacity 1.2s'}}>
+            Account created!
+          </div>
+        )}
       </header>
       {page === 'signin' && (
         <SignIn onSignIn={handleSignIn} onSwitchToCreate={() => setPage('create')} />
