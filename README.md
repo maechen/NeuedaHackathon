@@ -1,12 +1,45 @@
-# React + Vite
+# Neueda Hackathon - Loan Pre-Approval System
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A comprehensive loan pre-approval application built with React, Python ML backend, and Firebase authentication.
 
-Currently, two official plugins are available:
+## 🚀 Quick Start
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+**One-command startup:**
+```bash
+./start_system.sh
+```
 
-## Expanding the ESLint configuration
+This will automatically:
+- Set up the Python environment
+- Install all dependencies
+- Train the ML model (if needed)
+- Start both backend API and frontend
+- Open the application at http://localhost:5173
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 📖 Full Documentation
+
+For complete documentation, see [LOAN_SYSTEM_README.md](./LOAN_SYSTEM_README.md)
+
+## 🔧 Alternative Startup Methods
+
+**Check system status:**
+```bash
+./check_status.sh
+```
+
+**Manual startup (separate terminals):**
+```bash
+# Terminal 1 - Backend
+./start_backend.sh
+
+# Terminal 2 - Frontend  
+npm run dev
+```
+
+## 🏗️ Tech Stack
+
+- **Frontend**: React + Vite with Firebase Authentication
+- **Backend**: Flask API with CORS support
+- **ML Model**: scikit-learn Decision Tree Classifier
+- **Database**: Firebase Realtime Database
+- **Deployment**: Local development servers
