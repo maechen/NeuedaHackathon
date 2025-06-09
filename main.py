@@ -1,5 +1,5 @@
-from NeuedaHackathon.Data.data import process_data
-from NeuedaHackathon.Model.model import get_model, get_accuracy, get_confusion_matrix
+from Data.data import process_data
+from Model.model import get_model, get_accuracy, get_confusion_matrix
 
 # Load the data
 X_train, X_test, y_train, y_test = process_data("bank_loan.csv")

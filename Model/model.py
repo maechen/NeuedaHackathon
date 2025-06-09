@@ -1,7 +1,7 @@
 import os
 import joblib
-from NeuedaHackathon.Data.data import process_data
-from NeuedaHackathon.Model.gs import grid_search
+from Data.data import process_data
+from Model.gs import grid_search
 from sklearn.metrics import accuracy_score, confusion_matrix
 
 def get_model(model_path="", data_path="../bank_loan.csv", model_name="best_model.joblib"):
