@@ -16,10 +16,63 @@ function PersonalLoanForm({ onBack, onSubmit, user }) {
 
     const [loading, setLoading] = React.useState(false);
     const [error, setError] = React.useState("");
+    const [validationErrors, setValidationErrors] = React.useState({});
+
+    const validateField = (name, value) => {
+        const errors = { ...validationErrors };
+
+        switch (name) {
+            case "age":
+                if (value && (value < 18 || value > 100)) {
+                    errors.age = "Age must be between 18 and 100";
+                } else {
+                    delete errors.age;
+                }
+                break;
+            case "income":
+                if (value && value < 0) {
+                    errors.income = "Income cannot be negative";
+                } else {
+                    delete errors.income;
+                }
+                break;
+            case "familySize":
+                if (value && value < 1) {
+                    errors.familySize = "Family size must be at least 1";
+                } else {
+                    delete errors.familySize;
+                }
+                break;
+            case "zip":
+                if (value && !/^\d{5}(-\d{4})?$/.test(value)) {
+                    errors.zip = "Please enter a valid ZIP code";
+                } else {
+                    delete errors.zip;
+                }
+                break;
+            case "ccUsage":
+                if (value && (value < 0 || value > 100)) {
+                    errors.ccUsage =
+                        "Credit card usage must be between 0 and 100%";
+                } else {
+                    delete errors.ccUsage;
+                }
+                break;
+            default:
+                break;
+        }
+
+        setValidationErrors(errors);
+    };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setForm((prev) => ({ ...prev, [name]: value }));
+
+        // Real-time validation
+        if (value) {
+            validateField(name, value);
+        }
     };
 
     const handleSubmit = async (e) => {
@@ -82,24 +135,38 @@ function PersonalLoanForm({ onBack, onSubmit, user }) {
                     <p style={{ color: "red", marginBottom: 16 }}>{error}</p>
                 )}
                 <form onSubmit={handleSubmit} style={{ width: "100%" }}>
-                    <input
-                        name="age"
-                        type="number"
-                        min="18"
-                        max="100"
-                        placeholder="Age"
-                        value={form.age}
-                        onChange={handleChange}
-                        required
-                        style={{
-                            marginBottom: 12,
-                            width: "100%",
-                            padding: 8,
-                            background: "#f3f4f6",
-                            border: "1px solid #cce7ff",
-                            borderRadius: 8,
-                        }}
-                    />
+                    <div style={{ marginBottom: 12 }}>
+                        <input
+                            name="age"
+                            type="number"
+                            min="18"
+                            max="100"
+                            placeholder="Age"
+                            value={form.age}
+                            onChange={handleChange}
+                            required
+                            style={{
+                                width: "100%",
+                                padding: 8,
+                                background: "#f3f4f6",
+                                border: validationErrors.age
+                                    ? "1px solid #ff4444"
+                                    : "1px solid #cce7ff",
+                                borderRadius: 8,
+                            }}
+                        />
+                        {validationErrors.age && (
+                            <p
+                                style={{
+                                    color: "#ff4444",
+                                    fontSize: "0.8rem",
+                                    margin: "4px 0 0 0",
+                                }}
+                            >
+                                {validationErrors.age}
+                            </p>
+                        )}
+                    </div>
                     <input
                         name="income"
                         type="number"

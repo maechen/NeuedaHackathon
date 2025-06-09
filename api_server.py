@@ -12,6 +12,8 @@ import numpy as np
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import logging
+import hashlib
+from datetime import datetime, timedelta
 
 try:
     import joblib
@@ -45,6 +47,10 @@ logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for React frontend
+
+# Simple in-memory cache for predictions
+prediction_cache = {}
+CACHE_EXPIRY_HOURS = 1
 
 # Initialize Firebase Admin SDK
 firebase_initialized = False
@@ -85,6 +91,32 @@ if MODEL_AVAILABLE:
 else:
     logger.info("Model not available - using mock predictions")
 
+def get_cache_key(data):
+    """Generate cache key from input data"""
+    # Create a hash of the input data for caching
+    data_str = json.dumps(data, sort_keys=True)
+    return hashlib.md5(data_str.encode()).hexdigest()
+
+def get_cached_prediction(cache_key):
+    """Check if prediction exists in cache and is not expired"""
+    if cache_key in prediction_cache:
+        cached_data = prediction_cache[cache_key]
+        if datetime.now() - cached_data['timestamp'] < timedelta(hours=CACHE_EXPIRY_HOURS):
+            return cached_data['prediction']
+    return None
+
+def cache_prediction(cache_key, prediction):
+    """Store prediction in cache"""
+    prediction_cache[cache_key] = {
+        'prediction': prediction,
+        'timestamp': datetime.now()
+    }
+    # Clean old cache entries (simple cleanup)
+    if len(prediction_cache) > 1000:
+        oldest_key = min(prediction_cache.keys(), 
+                        key=lambda k: prediction_cache[k]['timestamp'])
+        del prediction_cache[oldest_key]
+
 @app.route('/api/health', methods=['GET'])
 def health_check():
     """Health check endpoint"""
@@ -106,6 +138,13 @@ def predict_loan_approval():
         
         if not data:
             return jsonify({'error': 'No data provided'}), 400
+        
+        # Check cache first
+        cache_key = get_cache_key(data)
+        cached_result = get_cached_prediction(cache_key)
+        if cached_result:
+            logger.info(f"Returning cached prediction for key: {cache_key}")
+            return jsonify(cached_result)
         
         logger.info(f"Received prediction request: {data}")
         
@@ -206,11 +245,17 @@ def predict_loan_approval():
         else:
             logger.info("Firebase not available - skipping data storage")
         
-        return jsonify({
+        # Prepare response
+        response = {
             'approval_percentage': approval_percentage,
             'confidence': 'high' if approval_percentage > 70 or approval_percentage < 30 else 'medium',
             'timestamp': pd.Timestamp.now().isoformat()
-        })
+        }
+        
+        # Cache the prediction
+        cache_prediction(cache_key, response)
+        
+        return jsonify(response)
         
     except Exception as e:
         logger.error(f"Prediction error: {e}")
