@@ -1,0 +1,14 @@
+{
+  "name": "firebase-auth-project",
+  "version": "1.0.0",
+  "description": "A simple project for user authentication using Firebase.",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "live-server public"
+  },
+  "dependencies": {
+    "firebase": "^9.0.0"
+  },
+  "author": "",
+  "license": "ISC"
+}
