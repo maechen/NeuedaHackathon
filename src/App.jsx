@@ -4,6 +4,7 @@ import carIcon from './assets/car.svg';
 import houseIcon from './assets/house.svg';
 import personalIcon from './assets/personal.svg';
 import schoolIcon from './assets/school.svg';
+import dollarSign from './assets/dollar-sign.png'; // Import the image
 import HomeLoanForm from './HomeLoanForm';
 import AutoLoanForm from './AutoLoanForm';
 import SchoolLoanForm from './SchoolLoanForm';
@@ -227,7 +228,7 @@ function VillageBankPage({ onBack }) {
     <div
       className="content"
       style={{
-        backgroundColor: '#121212',
+        backgroundColor: 'rgba(18, 18, 18, 0.95)', // Slight transparency
         color: '#fff',
         height: '100vh',
         width: '100vw', // Ensure it covers the full width
@@ -240,6 +241,7 @@ function VillageBankPage({ onBack }) {
         top: 0, // Start from the top
         left: 0, // Start from the left
         flexDirection: 'column',
+        zIndex: 1, // Ensure content stays above the image
       }}
     >
       {/* Add the bank name at the top-left corner */}
@@ -255,6 +257,22 @@ function VillageBankPage({ onBack }) {
       >
         Village Bank
       </h1>
+
+      {/* Add the dollar-sign image */}
+      <img
+        src={dollarSign}
+        alt="Dollar Sign"
+        style={{
+          position: 'absolute',
+          top: '50%',
+          right: '20px',
+          transform: 'translateY(-50%)',
+          width: '50vw',
+          height: 'auto',
+          opacity: 0.8,
+          zIndex: -1 ,
+        }}
+      />
 
       {!review && !result && (
         <div
