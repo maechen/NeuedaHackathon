@@ -1,4 +1,6 @@
 import React from 'react';
+import { auth, database } from './firebase';
+import { ref, set } from 'firebase/database';
 
 function AutoLoanForm({ onBack, onSubmit }) {
   const [form, setForm] = React.useState({
@@ -19,9 +21,29 @@ function AutoLoanForm({ onBack, onSubmit }) {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (onSubmit) onSubmit();
+    
+    try {
+      const user = auth.currentUser;
+      if (!user) {
+        console.error('No user is signed in');
+        return;
+      }
+
+      // Save the form data to Firebase
+      await set(ref(database, `loans/${user.uid}/auto/${Date.now()}`), {
+        ...form,
+        type: 'auto',
+        timestamp: new Date().toISOString(),
+        status: 'pending'
+      });
+
+      if (onSubmit) onSubmit();
+    } catch (error) {
+      console.error('Error saving loan application:', error);
+      alert('Failed to submit loan application. Please try again.');
+    }
   };
 
   return (

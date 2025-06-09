@@ -1,4 +1,6 @@
 import React from 'react';
+import { auth, database } from './firebase';
+import { ref, set } from 'firebase/database';
 
 function HomeLoanForm({ onBack, onSubmit }) {
   const [form, setForm] = React.useState({
@@ -19,11 +21,52 @@ function HomeLoanForm({ onBack, onSubmit }) {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (onSubmit) onSubmit();
+    
+    try {
+      const user = auth.currentUser;
+      if (!user) {
+        console.error('No user is signed in');
+        alert('Please sign in to submit a loan application');
+        return;
+      }
+
+      // Convert form values to numbers where needed
+      const formData = {
+        ...form,
+        age: parseInt(form.age),
+        income: parseFloat(form.income),
+        familySize: parseInt(form.familySize),
+        mortgageAmount: parseFloat(form.mortgageAmount),
+        personalLoans: parseInt(form.personalLoans),
+        securityAccounts: parseInt(form.securityAccounts),
+        creditAccounts: parseInt(form.creditAccounts),
+        ccUsage: parseFloat(form.ccUsage),
+        type: 'home',
+        timestamp: new Date().toISOString(),
+        status: 'pending',
+        userId: user.uid,
+        userEmail: user.email
+      };
+
+      console.log('Submitting home loan form data:', formData);
+
+      // Save the form data to Firebase
+      const loanRef = ref(database, `loans/${user.uid}/home/${Date.now()}`);
+      await set(loanRef, formData);
+
+      console.log('Home loan form data saved successfully');
+      alert('Home loan application submitted successfully!');
+
+      if (onSubmit) onSubmit();
+    } catch (error) {
+      console.error('Error saving home loan application:', error);
+      alert(`Failed to submit home loan application: ${error.message}`);
+    }
   };
 
+  // ...existing return JSX remains the same...
   return (
     <div className="content">
       <div className="card signin-card" style={{maxWidth: 500}}>
