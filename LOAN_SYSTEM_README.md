@@ -49,8 +49,9 @@ A comprehensive loan pre-approval application that integrates React frontend, Py
     ```bash
     ./start_system.sh
     ```
-    
+
     This single script will:
+
     - Set up Python virtual environment (if needed)
     - Install dependencies
     - Train ML model (if needed)
@@ -61,16 +62,19 @@ A comprehensive loan pre-approval application that integrates React frontend, Py
 3. **Option B: Manual Setup**:
 
     a. **Run the automated setup**:
+
     ```bash
     ./setup.sh
     ```
 
     b. **Start the backend** (Terminal 1):
+
     ```bash
     ./start_backend.sh
     ```
 
     c. **Start the frontend** (Terminal 2):
+
     ```bash
     ./start_frontend.sh
     ```
@@ -290,35 +294,36 @@ NeuedaHackathon/
 
 ### Main Scripts
 
-| Script | Purpose | Usage |
-|--------|---------|-------|
+| Script            | Purpose                    | Usage               |
+| ----------------- | -------------------------- | ------------------- |
 | `start_system.sh` | **🚀 Start entire system** | `./start_system.sh` |
-| `setup.sh` | Initial project setup | `./setup.sh` |
-| `check_status.sh` | Verify system status | `./check_status.sh` |
+| `setup.sh`        | Initial project setup      | `./setup.sh`        |
+| `check_status.sh` | Verify system status       | `./check_status.sh` |
 
 ### Individual Service Scripts
 
-| Script | Purpose | Usage |
-|--------|---------|-------|
-| `start_backend.sh` | Start API server only | `./start_backend.sh` |
-| `start_frontend.sh` | Start React app only | `./start_frontend.sh` |
+| Script                  | Purpose                 | Usage                     |
+| ----------------------- | ----------------------- | ------------------------- |
+| `start_backend.sh`      | Start API server only   | `./start_backend.sh`      |
+| `start_frontend.sh`     | Start React app only    | `./start_frontend.sh`     |
 | `start_backend_venv.sh` | Start backend with venv | `./start_backend_venv.sh` |
 
 ### Script Features
 
-- **`start_system.sh`** (Recommended):
-  - ✅ One-command startup
-  - ✅ Automatic dependency installation
-  - ✅ ML model training (if needed)
-  - ✅ Health checks and validation
-  - ✅ Graceful shutdown with Ctrl+C
-  - ✅ Process monitoring
+-   **`start_system.sh`** (Recommended):
 
-- **`check_status.sh`**:
-  - ✅ Frontend accessibility check
-  - ✅ Backend API health verification
-  - ✅ Model loading status
-  - ✅ Access URLs display
+    -   ✅ One-command startup
+    -   ✅ Automatic dependency installation
+    -   ✅ ML model training (if needed)
+    -   ✅ Health checks and validation
+    -   ✅ Graceful shutdown with Ctrl+C
+    -   ✅ Process monitoring
+
+-   **`check_status.sh`**:
+    -   ✅ Frontend accessibility check
+    -   ✅ Backend API health verification
+    -   ✅ Model loading status
+    -   ✅ Access URLs display
 
 ### Environment Variables
 
