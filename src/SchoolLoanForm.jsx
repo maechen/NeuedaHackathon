@@ -1,6 +1,6 @@
 import React from 'react';
 
-function SchoolLoanForm({ onBack }) {
+function SchoolLoanForm({ onBack, onSubmit }) {
   const [form, setForm] = React.useState({
     age: '',
     income: '',
@@ -22,7 +22,7 @@ function SchoolLoanForm({ onBack }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    alert('School Loan Application Submitted!');
+    if (onSubmit) onSubmit();
   };
 
   return (

@@ -1,6 +1,6 @@
 import React from 'react';
 
-function HomeLoanForm({ onBack }) {
+function HomeLoanForm({ onBack, onSubmit }) {
   const [form, setForm] = React.useState({
     age: '',
     income: '',
@@ -21,7 +21,7 @@ function HomeLoanForm({ onBack }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    alert('Submitted!');
+    if (onSubmit) onSubmit();
   };
 
   return (

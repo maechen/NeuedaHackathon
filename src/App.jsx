@@ -8,6 +8,7 @@ import HomeLoanForm from './HomeLoanForm';
 import AutoLoanForm from './AutoLoanForm';
 import SchoolLoanForm from './SchoolLoanForm';
 import PersonalLoanForm from './PersonalLoanForm';
+import ApprovalResult from './ApprovalResult';
 
 function SignIn({ onSignIn, onSwitchToCreate }) {
   const [email, setEmail] = useState('');
@@ -81,6 +82,7 @@ function CreateAccount({ onCreate, onSwitchToSignIn }) {
 
 function App() {
   const [page, setPage] = React.useState('signin');
+  const [approvalPercent, setApprovalPercent] = React.useState(90); // default for now
 
   const handleSignIn = (email, password) => {
     // Placeholder: Add authentication logic here
@@ -93,6 +95,9 @@ function App() {
     } else {
       alert('Passwords do not match or are empty.');
     }
+  };
+  const handleFormSubmit = () => {
+    setPage('result');
   };
 
   return (
@@ -141,16 +146,19 @@ function App() {
         </div>
       )}
       {page === 'home-loan' && (
-        <HomeLoanForm onBack={() => setPage('main')} />
+        <HomeLoanForm onBack={() => setPage('main')} onSubmit={handleFormSubmit} />
       )}
       {page === 'auto-loan' && (
-        <AutoLoanForm onBack={() => setPage('main')} />
+        <AutoLoanForm onBack={() => setPage('main')} onSubmit={handleFormSubmit} />
       )}
       {page === 'school-loan' && (
-        <SchoolLoanForm onBack={() => setPage('main')} />
+        <SchoolLoanForm onBack={() => setPage('main')} onSubmit={handleFormSubmit} />
       )}
       {page === 'personal-loan' && (
-        <PersonalLoanForm onBack={() => setPage('main')} />
+        <PersonalLoanForm onBack={() => setPage('main')} onSubmit={handleFormSubmit} />
+      )}
+      {page === 'result' && (
+        <ApprovalResult percent={approvalPercent} onBack={() => setPage('main')} onPercentChange={setApprovalPercent} />
       )}
     </div>
   );

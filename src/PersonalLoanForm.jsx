@@ -1,6 +1,6 @@
 import React from 'react';
 
-function PersonalLoanForm({ onBack }) {
+function PersonalLoanForm({ onBack, onSubmit }) {
   const [form, setForm] = React.useState({
     age: '',
     income: '',
@@ -21,7 +21,7 @@ function PersonalLoanForm({ onBack }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    alert('Personal Loan Application Submitted!');
+    if (onSubmit) onSubmit();
   };
 
   return (
