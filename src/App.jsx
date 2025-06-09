@@ -9,32 +9,71 @@ import AutoLoanForm from './AutoLoanForm';
 import SchoolLoanForm from './SchoolLoanForm';
 import PersonalLoanForm from './PersonalLoanForm';
 import ApprovalResult from './ApprovalResult';
+import { auth, database } from './firebase';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
+import { ref, set } from 'firebase/database';
 
 function SignIn({ onSignIn, onSwitchToCreate }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+
+  const handleSignIn = async (e) => {
+    e.preventDefault();
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      onSignIn(email);
+    } catch (error) {
+      setError('Failed to sign in: ' + error.message);
+      console.error('Sign in error:', error);
+    }
+  };
+
   return (
     <div className="content">
       <div className="card signin-card">
         <h2>Sign In</h2>
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={e => setEmail(e.target.value)}
-          style={{ marginBottom: 12, width: '100%', padding: 8 }}
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={e => setPassword(e.target.value)}
-          style={{ marginBottom: 20, width: '100%', padding: 8 }}
-        />
-        <button onClick={() => onSignIn(email, password)} style={{ width: '100%' }}>Sign In</button>
+        {error && <p style={{ color: 'red' }}>{error}</p>}
+        <form onSubmit={handleSignIn} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            style={{
+              fontSize: '1.05rem',
+              padding: '10px 12px',
+              borderRadius: 10,
+              marginBottom: 0,
+              background: '#f3f4f6',
+              border: '1.2px solid #cce7ff',
+              width: '100%',
+              boxSizing: 'border-box',
+            }}
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            style={{
+              fontSize: '1.05rem',
+              padding: '10px 12px',
+              borderRadius: 10,
+              marginBottom: 0,
+              background: '#f3f4f6',
+              border: '1.2px solid #cce7ff',
+              width: '100%',
+              boxSizing: 'border-box',
+            }}
+          />
+          <button type="submit" style={{ marginTop: 16, width: '100%' }}>Sign In</button>
+        </form>
         <p style={{ marginTop: 16, color: '#003366' }}>
           Don't have an account?{' '}
-          <a href="#" onClick={onSwitchToCreate} style={{ color: '#003366', fontWeight: 600 }}>Sign Up</a>
+          <button style={{ color: '#003366', fontWeight: 600, background: 'none', border: 'none', cursor: 'pointer' }} onClick={onSwitchToCreate}>Sign Up</button>
         </p>
       </div>
     </div>
@@ -45,35 +84,90 @@ function CreateAccount({ onCreate, onSwitchToSignIn }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
+  const [error, setError] = useState('');
+
+  const handleCreate = async (e) => {
+    e.preventDefault();
+    if (password !== confirm) {
+      setError('Passwords do not match');
+      return;
+    }
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      await set(ref(database, `users/${user.uid}`), {
+        email: email,
+        createdAt: new Date().toISOString()
+      });
+      onCreate(email);
+    } catch (error) {
+      setError('Failed to create account: ' + error.message);
+      console.error('Sign up error:', error);
+    }
+  };
+
   return (
     <div className="content">
       <div className="card signin-card">
         <h2>Create Account</h2>
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={e => setEmail(e.target.value)}
-          style={{ marginBottom: 12, width: '100%', padding: 8 }}
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={e => setPassword(e.target.value)}
-          style={{ marginBottom: 12, width: '100%', padding: 8 }}
-        />
-        <input
-          type="password"
-          placeholder="Confirm Password"
-          value={confirm}
-          onChange={e => setConfirm(e.target.value)}
-          style={{ marginBottom: 20, width: '100%', padding: 8 }}
-        />
-        <button onClick={() => onCreate(email, password, confirm)} style={{ width: '100%' }}>Create Account</button>
-        <p style={{ marginTop: 16 }}>
+        {error && <p style={{ color: 'red' }}>{error}</p>}
+        <form onSubmit={handleCreate} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            style={{
+              fontSize: '1.05rem',
+              padding: '10px 12px',
+              borderRadius: 10,
+              marginBottom: 0,
+              background: '#f3f4f6',
+              border: '1.2px solid #cce7ff',
+              width: '100%',
+              boxSizing: 'border-box',
+            }}
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            style={{
+              fontSize: '1.05rem',
+              padding: '10px 12px',
+              borderRadius: 10,
+              marginBottom: 0,
+              background: '#f3f4f6',
+              border: '1.2px solid #cce7ff',
+              width: '100%',
+              boxSizing: 'border-box',
+            }}
+          />
+          <input
+            type="password"
+            placeholder="Confirm Password"
+            value={confirm}
+            onChange={(e) => setConfirm(e.target.value)}
+            required
+            style={{
+              fontSize: '1.05rem',
+              padding: '10px 12px',
+              borderRadius: 10,
+              marginBottom: 0,
+              background: '#f3f4f6',
+              border: '1.2px solid #cce7ff',
+              width: '100%',
+              boxSizing: 'border-box',
+            }}
+          />
+          <button type="submit" style={{ marginTop: 16, width: '100%' }}>Create Account</button>
+        </form>
+        <p style={{ marginTop: 16, color: '#003366' }}>
           Already have an account?{' '}
-          <a href="#" onClick={onSwitchToSignIn}>Sign In</a>
+          <button style={{ color: '#003366', fontWeight: 600, background: 'none', border: 'none', cursor: 'pointer' }} onClick={onSwitchToSignIn}>Sign In</button>
         </p>
       </div>
     </div>
@@ -81,29 +175,26 @@ function CreateAccount({ onCreate, onSwitchToSignIn }) {
 }
 
 function App() {
-  const [page, setPage] = React.useState('signin');
-  const [approvalPercent, setApprovalPercent] = React.useState(90); // default for now
-  const [showAccountCreated, setShowAccountCreated] = React.useState(false);
-  const [showUserMenu, setShowUserMenu] = React.useState(false);
-  const [isSignedIn, setIsSignedIn] = React.useState(false);
+  const [page, setPage] = useState('signin');
+  const [approvalPercent, setApprovalPercent] = useState(90); // default for now
+  const [showAccountCreated, setShowAccountCreated] = useState(false);
+  const [showUserMenu, setShowUserMenu] = useState(false);
+  const [isSignedIn, setIsSignedIn] = useState(false);
+  const [user, setUser] = useState(null);
 
-  const handleSignIn = (email, password) => {
-    // Placeholder: Add authentication logic here
+  const handleSignIn = (email) => {
     setIsSignedIn(true);
+    setUser({ email });
     setPage('main');
   };
-  const handleCreate = (email, password, confirm) => {
-    // Placeholder: Add account creation logic here
-    if (password === confirm && password.length > 0) {
-      setShowAccountCreated(true);
-      setTimeout(() => setShowAccountCreated(false), 3000);
-      setPage('signin');
-    } else {
-      alert('Passwords do not match or are empty.');
-    }
+  const handleCreate = (email) => {
+    setShowAccountCreated(true);
+    setTimeout(() => setShowAccountCreated(false), 3000);
+    setPage('signin');
   };
   const handleSignOut = () => {
     setIsSignedIn(false);
+    setUser(null);
     setPage('signin');
     setShowUserMenu(false);
   };
@@ -140,10 +231,16 @@ function App() {
         )}
       </header>
       {page === 'signin' && (
-        <SignIn onSignIn={handleSignIn} onSwitchToCreate={() => setPage('create')} />
+        <SignIn 
+          onSignIn={handleSignIn} 
+          onSwitchToCreate={() => setPage('create')} 
+        />
       )}
       {page === 'create' && (
-        <CreateAccount onCreate={handleCreate} onSwitchToSignIn={() => setPage('signin')} />
+        <CreateAccount 
+          onCreate={handleCreate} 
+          onSwitchToSignIn={() => setPage('signin')} 
+        />
       )}
       {page === 'main' && (
         <div className="content">
