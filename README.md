@@ -2,6 +2,8 @@
 
 A comprehensive loan pre-approval application built with React, Python ML backend, and Firebase authentication. Made within FOUR hours.
 
+Checkout our presentation slides: https://docs.google.com/presentation/d/1h4gpfzXfd7NH1MamE_8c6LulZfpvuGll2V421GNmVws/edit?usp=sharing
+
 ## 🚀 Quick Start
 
 **One-command startup:**
