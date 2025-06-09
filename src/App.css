@@ -1,0 +1,85 @@
+/* General Page Setup */
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: #f7f9fc;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* Entire App wrapper */
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Gradient Header */
+.header {
+  width: 100%;
+  padding: 20px 0;
+  text-align: center;
+  color: white;
+  background: linear-gradient(to right, #003366, #66ccff); /* dark to light blue */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+/* Main content area fills remaining height */
+.main-content {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Card container */
+.container {
+  width: 100%;
+  max-width: 600px;
+  padding: 40px;
+  background-color: white;
+  text-align: center;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+}
+
+
+/* Text */
+h2 {
+  font-size: 1.6rem;
+  margin-bottom: 10px;
+}
+
+p {
+  font-size: 1.1rem;
+  margin-bottom: 20px;
+}
+
+/* Buttons */
+.button-group {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+button {
+  background-color: #cce7ff;
+  border: none;
+  color: #003366;
+  padding: 12px 24px;
+  font-size: 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+button:hover {
+  background-color: #a6d4ff;
+}
