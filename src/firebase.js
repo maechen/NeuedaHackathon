@@ -13,7 +13,7 @@ const firebaseConfig = {
     authDomain: "neueda-hackathon.firebaseapp.com",
     databaseURL: "https://neueda-hackathon-default-rtdb.firebaseio.com",
     projectId: "neueda-hackathon",
-    storageBucket: "neueda-hackathon.firebasestorage.app",
+    storageBucket: "neueda-hackathon.appspot.com",
     messagingSenderId: "649932171164",
     appId: "1:649932171164:web:ffe1463c46ce5b77a58a59",
     measurementId: "G-08KVF5WJ70",

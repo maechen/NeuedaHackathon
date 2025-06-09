@@ -18,7 +18,7 @@ function getApprovalColor(percent) {
   }
 }
 
-function ApprovalResult({ percent = 90, onBack, onPercentChange }) {
+function ApprovalResult({ percent = 90, onBack, onPercentChange, onGoToBank }) {
   const size = 220;
   const strokeWidth = 18;
   const radius = (size - strokeWidth) / 2;
@@ -91,6 +91,32 @@ function ApprovalResult({ percent = 90, onBack, onPercentChange }) {
           />
         </div>
         <button onClick={onBack} style={{ width: 180, background: '#eee', color: '#003366' }}>Back to Home</button>
+        <button
+          style={{
+            marginTop: 18,
+            width: 180,
+            background: '#003366',
+            color: '#fff',
+            border: 'none',
+            borderRadius: 10,
+            padding: '14px 0',
+            fontSize: '1.1rem',
+            fontWeight: 600,
+            boxShadow: '0 2px 12px rgba(0,0,0,0.10)',
+            cursor: 'pointer',
+            letterSpacing: 1
+          }}
+          onClick={() => {
+            if (typeof window !== 'undefined' && window.setPage) {
+              window.setPage('bank');
+            }
+            if (typeof onGoToBank === 'function') {
+              onGoToBank();
+            }
+          }}
+        >
+          Go to Bank Page
+        </button>
       </div>
     </div>
   );
