@@ -1,6 +1,6 @@
 # Neueda Hackathon - Loan Pre-Approval System
 
-A comprehensive loan pre-approval application built with React, Python ML backend, and Firebase authentication.
+A comprehensive loan pre-approval application built with React, Python ML backend, and Firebase authentication. Made within FOUR hours.
 
 ## 🚀 Quick Start
 
