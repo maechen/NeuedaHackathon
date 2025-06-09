@@ -3,26 +3,11 @@ import { auth, database } from './firebase';
 import { ref, set } from 'firebase/database';
 
 function HomeLoanForm({ onBack, onSubmit }) {
-  const [form, setForm] = React.useState({
-    age: '',
-    income: '',
-    zip: '',
-    familySize: '',
-    education: '',
-    mortgageAmount: '',
-    personalLoans: '',
-    securityAccounts: '',
-    creditAccounts: '',
-    ccUsage: '',
-  });
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
-  };
+  // ...existing form state code...
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log('Form submission started');
     
     try {
       const user = auth.currentUser;
@@ -32,7 +17,12 @@ function HomeLoanForm({ onBack, onSubmit }) {
         return;
       }
 
-      // Convert form values to numbers where needed
+      console.log('Current user:', user.uid);
+
+      // Create a unique ID for the loan application
+      const loanId = Date.now();
+      
+      // Prepare form data
       const formData = {
         ...form,
         age: parseInt(form.age),
@@ -47,57 +37,51 @@ function HomeLoanForm({ onBack, onSubmit }) {
         timestamp: new Date().toISOString(),
         status: 'pending',
         userId: user.uid,
-        userEmail: user.email
+        userEmail: user.email,
+        loanId: loanId
       };
 
-      console.log('Submitting home loan form data:', formData);
+      console.log('Prepared form data:', formData);
 
-      // Save the form data to Firebase
-      const loanRef = ref(database, `loans/${user.uid}/home/${Date.now()}`);
+      // Create the database reference
+      const dbPath = `loans/${user.uid}/home/${loanId}`;
+      console.log('Database path:', dbPath);
+      const loanRef = ref(database, dbPath);
+
+      // Attempt to save the data
+      console.log('Attempting to save data...');
       await set(loanRef, formData);
+      console.log('Data saved successfully');
 
-      console.log('Home loan form data saved successfully');
+      // Clear the form
+      setForm({
+        age: '',
+        income: '',
+        zip: '',
+        familySize: '',
+        education: '',
+        mortgageAmount: '',
+        personalLoans: '',
+        securityAccounts: '',
+        creditAccounts: '',
+        ccUsage: '',
+      });
+
       alert('Home loan application submitted successfully!');
 
-      if (onSubmit) onSubmit();
+      if (onSubmit) {
+        console.log('Calling onSubmit callback');
+        onSubmit();
+      }
     } catch (error) {
-      console.error('Error saving home loan application:', error);
+      console.error('Detailed error:', error);
+      console.error('Error code:', error.code);
+      console.error('Error message:', error.message);
       alert(`Failed to submit home loan application: ${error.message}`);
     }
   };
 
-  // ...existing return JSX remains the same...
-  return (
-    <div className="content">
-      <div className="card signin-card" style={{maxWidth: 500}}>
-        <h2>Step 2: Input Information</h2>
-        <form onSubmit={handleSubmit} style={{width: '100%'}}>
-          <input name="age" type="number" min="18" max="100" placeholder="Age" value={form.age} onChange={handleChange} required style={{marginBottom: 12, width: '100%', padding: 8, background: '#f3f4f6', border: '1px solid #cce7ff', borderRadius: 8}} />
-          <input name="income" type="number" min="0" placeholder="Annual Income ($)" value={form.income} onChange={handleChange} required style={{marginBottom: 12, width: '100%', padding: 8, background: '#f3f4f6', border: '1px solid #cce7ff', borderRadius: 8}} />
-          <input name="zip" type="text" placeholder="ZIP Code" value={form.zip} onChange={handleChange} required style={{marginBottom: 12, width: '100%', padding: 8, background: '#f3f4f6', border: '1px solid #cce7ff', borderRadius: 8}} />
-          <input name="familySize" type="number" min="1" placeholder="Family Size" value={form.familySize} onChange={handleChange} required style={{marginBottom: 12, width: '100%', padding: 8, background: '#f3f4f6', border: '1px solid #cce7ff', borderRadius: 8}} />
-          <select name="education" value={form.education} onChange={handleChange} required style={{marginBottom: 12, width: '100%', padding: 8, background: '#f3f4f6', border: '1px solid #cce7ff', borderRadius: 8, color: form.education ? '#111' : '#888'}}>
-            <option value="" disabled style={{color: '#888'}}>Education Level</option>
-            <option value="No High School" style={{color: '#111'}}>No High School</option>
-            <option value="High School Diploma or GED" style={{color: '#111'}}>High School Diploma or GED</option>
-            <option value="Some College" style={{color: '#111'}}>Some College</option>
-            <option value="Associate Degree" style={{color: '#111'}}>Associate Degree</option>
-            <option value="Bachelor's Degree" style={{color: '#111'}}>Bachelor's Degree</option>
-            <option value="Master's Degree" style={{color: '#111'}}>Master's Degree</option>
-            <option value="Doctorate or Professional" style={{color: '#111'}}>Doctorate or Professional</option>
-            <option value="Other" style={{color: '#111'}}>Other</option>
-          </select>
-          <input name="mortgageAmount" type="number" min="0" placeholder="Mortgage Amount ($)" value={form.mortgageAmount} onChange={handleChange} required style={{marginBottom: 12, width: '100%', padding: 8, background: '#f3f4f6', border: '1px solid #cce7ff', borderRadius: 8}} />
-          <input name="personalLoans" type="number" min="0" placeholder="Personal Loans (count)" value={form.personalLoans} onChange={handleChange} required style={{marginBottom: 12, width: '100%', padding: 8, background: '#f3f4f6', border: '1px solid #cce7ff', borderRadius: 8}} />
-          <input name="securityAccounts" type="number" min="0" placeholder="Security Accounts (count)" value={form.securityAccounts} onChange={handleChange} required style={{marginBottom: 12, width: '100%', padding: 8, background: '#f3f4f6', border: '1px solid #cce7ff', borderRadius: 8}} />
-          <input name="creditAccounts" type="number" min="0" placeholder="Credit Accounts (count)" value={form.creditAccounts} onChange={handleChange} required style={{marginBottom: 12, width: '100%', padding: 8, background: '#f3f4f6', border: '1px solid #cce7ff', borderRadius: 8}} />
-          <input name="ccUsage" type="number" min="0" max="100" placeholder="Credit Card Usage Avg (%)" value={form.ccUsage} onChange={handleChange} required style={{marginBottom: 20, width: '100%', padding: 8, background: '#f3f4f6', border: '1px solid #cce7ff', borderRadius: 8}} />
-          <button type="submit" style={{width: '100%'}}>Submit</button>
-        </form>
-        <button onClick={onBack} style={{marginTop: 16, width: '100%', background: '#eee', color: '#003366'}}>Back</button>
-      </div>
-    </div>
-  );
+  // ...existing return JSX...
 }
 
 export default HomeLoanForm;
